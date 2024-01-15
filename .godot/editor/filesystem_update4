@@ -1,0 +1,13 @@
+res://map_tile.gd
+res://map_tile.tscn
+res://scenes/map_tile.tscn
+res://scenes/battle_map.tscn
+res://scenes/battle_map.gd
+res://scenes/units/battle_unit.tscn
+res://scenes/units/battle_unit.gd
+res://scenes/units/unit_data.gd
+res://scenes/TestScene.tscn
+res://scenes/PlayerInputManager.gd
+res://scenes/player_input_manager.gd
+res://scenes/ui/unit_info_panel.tscn
+res://scenes/ui/unit_info_panel.gd

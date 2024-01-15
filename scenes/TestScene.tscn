@@ -1,0 +1,35 @@
+[gd_scene load_steps=6 format=3 uid="uid://bs3qt42blir2h"]
+
+[ext_resource type="PackedScene" uid="uid://bchqgfqdjpox5" path="res://scenes/battle_map.tscn" id="1_fksi7"]
+[ext_resource type="Script" path="res://scenes/units/unit_data.gd" id="2_2mp6b"]
+[ext_resource type="Script" path="res://scenes/player_input_manager.gd" id="2_4rsw2"]
+[ext_resource type="PackedScene" uid="uid://dju7l6dwiuyl0" path="res://scenes/ui/unit_info_panel.tscn" id="4_q0s5u"]
+
+[sub_resource type="Resource" id="Resource_etgtt"]
+script = ExtResource("2_2mp6b")
+unit_name = "Default Unit"
+max_health = 10
+attack = 3
+defense = 1
+movement = 3
+range = 1
+
+[node name="TestScene" type="Node2D"]
+
+[node name="BattleMap" parent="." instance=ExtResource("1_fksi7")]
+data_template = SubResource("Resource_etgtt")
+
+[node name="PlayerInputManager" type="Node" parent="."]
+script = ExtResource("2_4rsw2")
+
+[node name="UnitInfo" parent="." instance=ExtResource("4_q0s5u")]
+anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
+offset_left = 8.0
+offset_top = 651.0
+offset_right = 8.0
+offset_bottom = 651.0
+grow_vertical = 1
+
+[connection signal="unit_selected" from="PlayerInputManager" to="UnitInfo" method="_on_unit_selected"]
