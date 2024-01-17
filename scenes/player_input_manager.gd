@@ -7,6 +7,8 @@ signal unit_deselected(unit)
 signal destination_clicked(tile)
 signal target_clicked(unit)
 
+signal unit_hovered(unit)
+
 var current_unit
 
 func _input(event):
@@ -18,12 +20,14 @@ func _input(event):
 		#print("Mouse Click/Unclick at: ", event.position)
 		#print("Tile coordinate: ", BattleMap.map.get_map_tile_from_world_position(event.position))
 	# Mouse move
-	#elif event is InputEventMouseMotion:
-	##	print("Mouse Motion at: ", event.position)
+	elif event is InputEventMouseMotion:
+		var tile = BattleMap.map.get_map_tile_from_world_position(event.position)
+		if tile != null:
+			_on_tile_hovered(tile)
 
 func _on_tile_clicked(tile: MapTile):
 	if current_unit == null:
-		if tile.occupant != null:
+		if tile.occupant != null and (tile.occupant.can_move or tile.occupant.can_attack):
 			current_unit = tile.occupant
 			_on_unit_selected(tile.occupant)
 	else:
@@ -32,13 +36,18 @@ func _on_tile_clicked(tile: MapTile):
 			_on_unit_deselected(tile.occupant)
 		elif tile.occupant == null:
 			_on_empty_tile_clicked(tile)
-			current_unit.move_to(tile)
-			current_unit = null
+			if current_unit.can_move and current_unit.get_moveable_tiles().has(tile):
+				current_unit.move_to(tile)
+				current_unit = null
 		else:
 			_on_occupied_tile_clicked(tile.occupant)
-			current_unit.attack(tile.occupant)
-			current_unit = null
+			if current_unit.can_attack and current_unit.get_attackable_tiles().has(tile):
+				current_unit.attack(tile.occupant)
+				current_unit = null
 
+func _on_tile_hovered(tile: MapTile):
+	if tile.occupant != null:
+		unit_hovered.emit(tile.occupant)
 
 func _on_unit_selected(unit):
 	print("Unit selected")

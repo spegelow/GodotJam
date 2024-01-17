@@ -1,0 +1,68 @@
+[gd_scene load_steps=9 format=3 uid="uid://dpoi8j3k5ki3y"]
+
+[ext_resource type="PackedScene" uid="uid://bchqgfqdjpox5" path="res://scenes/battle_map.tscn" id="1_66l2e"]
+[ext_resource type="Script" path="res://scenes/units/unit_data.gd" id="2_872lc"]
+[ext_resource type="Script" path="res://scenes/player_input_manager.gd" id="3_tf8g8"]
+[ext_resource type="PackedScene" uid="uid://dju7l6dwiuyl0" path="res://scenes/ui/unit_info_panel.tscn" id="4_extjv"]
+[ext_resource type="Texture2D" uid="uid://clnu6g04yoqs0" path="res://art/landscape.png" id="5_lvqc5"]
+
+[sub_resource type="Resource" id="Resource_wsyg1"]
+script = ExtResource("2_872lc")
+unit_name = "Default Unit"
+max_health = 10
+attack = 5
+defense = 2
+movement = 4
+range = 2
+
+[sub_resource type="Resource" id="Resource_aafpa"]
+script = ExtResource("2_872lc")
+unit_name = "Enemy"
+max_health = 5
+attack = 3
+defense = 1
+movement = 2
+range = 1
+
+[sub_resource type="Resource" id="Resource_mxa60"]
+script = ExtResource("2_872lc")
+unit_name = "Player Base"
+max_health = 10
+attack = 0
+defense = 1
+movement = 0
+range = 0
+
+[node name="game" type="Node"]
+
+[node name="BattleMap" parent="." instance=ExtResource("1_66l2e")]
+data_template = SubResource("Resource_wsyg1")
+enemy_data_template = SubResource("Resource_aafpa")
+base_data_template = SubResource("Resource_mxa60")
+
+[node name="PlayerInputManager" type="Node" parent="."]
+script = ExtResource("3_tf8g8")
+
+[node name="UnitInfo" parent="." instance=ExtResource("4_extjv")]
+
+[node name="End Turn" type="Button" parent="."]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -39.0
+offset_top = 10.0
+offset_right = 39.0
+offset_bottom = 41.0
+grow_horizontal = 2
+text = "End Turn"
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(0.686275, 0.686275, 0.686275, 1)
+z_index = -1
+position = Vector2(305, 982)
+scale = Vector2(0.310814, 0.505912)
+texture = ExtResource("5_lvqc5")
+
+[connection signal="unit_hovered" from="PlayerInputManager" to="UnitInfo" method="_on_unit_hovered"]
+[connection signal="unit_selected" from="PlayerInputManager" to="UnitInfo" method="_on_unit_selected"]
+[connection signal="button_down" from="End Turn" to="BattleMap" method="end_player_turn"]

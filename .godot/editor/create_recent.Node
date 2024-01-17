@@ -1,8 +1,10 @@
+Sprite2D
+Button
+PanelContainer
+Control
+Node
 Container
 Label
 GridContainer
-PanelContainer
 VBoxContainer
 Panel
-Node
-Sprite2D
