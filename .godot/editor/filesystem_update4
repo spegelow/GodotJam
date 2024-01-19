@@ -1,8 +1,3 @@
+res://scenes/damage_text.tscn
 res://scenes/game.tscn
-res://scenes/ui/unit_info_panel.gd
-res://scenes/units/battle_unit.tscn
-res://scenes/battle_map.gd
-res://scenes/units/battle_unit.gd
-res://scenes/player_input_manager.gd
-res://scenes/map_tile.tscn
-res://scenes/units/enemy_battle_unit.tscn
+res://scenes/damage_text.gd

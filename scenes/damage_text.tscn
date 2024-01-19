@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://cn5sypx7le2jv"]
+
+[ext_resource type="Script" path="res://scenes/damage_text.gd" id="1_1v4cf"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_773lw"]
+font_size = 50
+font_color = Color(0.933333, 0, 0, 1)
+outline_size = 5
+outline_color = Color(0, 0, 0, 1)
+
+[node name="DamageText" type="Label"]
+offset_right = 40.0
+offset_bottom = 23.0
+text = "##"
+label_settings = SubResource("LabelSettings_773lw")
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("1_1v4cf")

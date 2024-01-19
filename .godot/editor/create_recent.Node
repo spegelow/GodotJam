@@ -1,10 +1,11 @@
+Label
+Node
 Sprite2D
+Node2D
 Button
 PanelContainer
 Control
-Node
 Container
-Label
 GridContainer
 VBoxContainer
 Panel

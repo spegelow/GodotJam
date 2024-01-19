@@ -8,6 +8,7 @@ signal destination_clicked(tile)
 signal target_clicked(unit)
 
 signal unit_hovered(unit)
+signal nothing_hovered(unit)
 
 var current_unit
 
@@ -37,17 +38,18 @@ func _on_tile_clicked(tile: MapTile):
 		elif tile.occupant == null:
 			_on_empty_tile_clicked(tile)
 			if current_unit.can_move and current_unit.get_moveable_tiles().has(tile):
-				current_unit.move_to(tile)
-				current_unit = null
+				await current_unit.move_to(tile)
 		else:
 			_on_occupied_tile_clicked(tile.occupant)
 			if current_unit.can_attack and current_unit.get_attackable_tiles().has(tile):
-				current_unit.attack(tile.occupant)
+				await current_unit.attack(tile.occupant)
 				current_unit = null
 
 func _on_tile_hovered(tile: MapTile):
 	if tile.occupant != null:
 		unit_hovered.emit(tile.occupant)
+	else:
+		nothing_hovered.emit()
 
 func _on_unit_selected(unit):
 	print("Unit selected")

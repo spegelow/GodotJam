@@ -7,8 +7,11 @@ class_name BattleMap
 
 var tiles : Array
 var units : Array
+var spawners : Array
 
 var player_base
+
+var current_round
 
 @export var data_template: UnitData
 @export var enemy_data_template: UnitData
@@ -32,31 +35,40 @@ func create_dev_map():
 	
 	#Let's create units and place them
 	units = []
-	var u1 = BattleUnit.build_unit(data_template, get_map_tile(2,3))
-	units.append(u1)
-	add_child(u1)
-	u1 = BattleUnit.build_unit(data_template, get_map_tile(3,3))
-	units.append(u1)
-	add_child(u1)
-	
-	var u2 = BattleUnit.build_enemy_unit(enemy_data_template, get_map_tile(5,5))
-	units.append(u2)
-	add_child(u2)
-	u2 = BattleUnit.build_enemy_unit(enemy_data_template, get_map_tile(10,10))
-	units.append(u2)
-	add_child(u2)
-	u2 = BattleUnit.build_enemy_unit(enemy_data_template, get_map_tile(1,1))
-	units.append(u2)
-	add_child(u2)
+	var u = create_player_unit(data_template, get_map_tile(2,3))
+	u = create_player_unit(data_template, get_map_tile(3,3))
 	
 	#Let's create the player base
-	player_base = BattleUnit.build_base(base_data_template, get_map_tile(6,6))
-	add_child(player_base)
+	create_player_base(base_data_template, get_map_tile(6,6))
+	
+	#Let's create a few spawners
+	spawners = []
 	
 	#Let's start the player turn
+	current_round = 0
 	start_player_turn()
 
+
+func create_player_unit(data: UnitData, tile: MapTile) -> BattleUnit:
+	var u = BattleUnit.build_unit(data, tile)
+	units.append(u)
+	add_child(u)
+	return u
+
+func create_enemy_unit(data: UnitData, tile: MapTile) -> BattleUnit:
+	var u = BattleUnit.build_enemy_unit(data, tile)
+	units.append(u)
+	add_child(u)
+	return u
+
+func create_player_base(data: UnitData, tile: MapTile) -> BattleUnit:
+	var u = BattleUnit.build_base(data, tile)
+	player_base = u
+	add_child(u)
+	return u
+
 func start_player_turn():
+	current_round += 1
 	for u in units:
 		if u.is_player_unit:
 			u.can_move = true
@@ -73,11 +85,36 @@ func end_player_turn():
 func resolve_enemy_turn():
 	for u in units:
 		if not u.is_player_unit:
-			print("Enemy turn")
-			u.resolve_enemy_turn()
+			#print("Enemy turn")
+			await u.resolve_enemy_turn()
+	
+	#Trigger any existing spawners
+	var to_remove = []
+	for s in spawners:
+		await s.try_spawn_next()
+		if s.enemies_to_spawn.size() == 0:
+			to_remove.append(s)
+		
+	for s in to_remove:
+		spawners.erase(s)
+		s.queue_free()
+	
+	#Create new spawners
+	EnemySpawnManager.spawn_manager.create_new_spawner(current_round)
 	
 	start_player_turn()
 
+func resolve_unit_death(unit):
+	if not unit.is_base:
+		units.erase(unit)
+		unit.queue_free()
+		if not units.any(func(u): u.is_player_unit):
+			resolve_loss()
+	else:
+		resolve_loss()
+
+func resolve_loss():
+	print("You lose! Git gud!")
 
 func get_map_tile_vector2D(coordinate: Vector2):
 	return get_map_tile(coordinate.x, coordinate.y)
@@ -101,6 +138,10 @@ func get_tiles_in_range(origin: MapTile, range: int) -> Array:
 				if t != null:
 					tiles_in_range.append(t)
 	return tiles_in_range
+
+func on_player_attack_resolved():
+	if not units.any(func(u): return u.can_attack and u.is_player_unit):
+		end_player_turn()
 
 func generate_map():
 	#Initialize array of tiles
