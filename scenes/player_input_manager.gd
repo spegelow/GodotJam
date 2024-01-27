@@ -11,13 +11,20 @@ signal unit_hovered(unit)
 signal nothing_hovered(unit)
 
 var current_unit
+var can_process_clicks = true
+
+static var manager: PlayerInputManager
+
+func _init():
+	manager = self
 
 func _input(event):
 	# Mouse click
 	if event is InputEventMouseButton and event.is_pressed():
-		var tile = BattleMap.map.get_map_tile_from_world_position(event.position)
-		if tile != null:
-			_on_tile_clicked(tile)
+		if can_process_clicks:
+			var tile = BattleMap.map.get_map_tile_from_world_position(event.position)
+			if tile != null:
+				_on_tile_clicked(tile)
 		#print("Mouse Click/Unclick at: ", event.position)
 		#print("Tile coordinate: ", BattleMap.map.get_map_tile_from_world_position(event.position))
 	# Mouse move
@@ -38,10 +45,26 @@ func _on_tile_clicked(tile: MapTile):
 		elif tile.occupant == null:
 			_on_empty_tile_clicked(tile)
 			if current_unit.can_move and current_unit.get_moveable_tiles().has(tile):
+				can_process_clicks = false
 				await current_unit.move_to(tile)
+				BattleMap.map.reset_highlighting()
+				if current_unit.get_attackable_tiles().size() != 0:
+					current_unit.current_tile.set_highlight(Color.LIME_GREEN)
+					select_highlight(current_unit)
+					can_process_clicks = true
+				else:
+					current_unit.can_attack = false
+					_on_unit_deselected(current_unit)
+					current_unit = null
+					BattleMap.map.on_player_attack_resolved()
+			else:
+				_on_unit_deselected(current_unit)
+				current_unit = null
 		else:
 			_on_occupied_tile_clicked(tile.occupant)
 			if current_unit.can_attack and current_unit.get_attackable_tiles().has(tile):
+				BattleMap.map.reset_highlighting()
+				can_process_clicks = false
 				await current_unit.attack(tile.occupant)
 				current_unit = null
 
@@ -54,12 +77,25 @@ func _on_tile_hovered(tile: MapTile):
 func _on_unit_selected(unit):
 	print("Unit selected")
 	unit_selected.emit(unit)
+	select_highlight(unit)
 
 func _on_unit_deselected(unit):
 	print("Unit deselected")
+	unit_deselected.emit(unit)
 
 func _on_empty_tile_clicked(tile):
 	print("Unit moved")
+	destination_clicked.emit(tile)
 
 func _on_occupied_tile_clicked(unit):
 	print("Unit attacked")
+	target_clicked.emit(unit)
+
+func select_highlight(unit):
+	#Display move range & attack range
+	var m_tiles = unit.get_moveable_tiles()
+	var a_tiles = unit.get_attackable_tiles()
+	if unit.can_move:
+		BattleMap.map.highlight_tiles(m_tiles, Color.GREEN)
+	if unit.can_attack:
+		BattleMap.map.highlight_tiles(a_tiles, Color.RED)

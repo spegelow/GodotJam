@@ -10,6 +10,10 @@ class_name UnitData
 @export var _range = 1
 @export var _exp_value = 1
 
+@export var _tag_list: Array[String] = []
+
+@export var unit_sprite: Texture2D
+
 func get_stat(stat) -> Variant:
 	match stat:
 		'unit_name':

@@ -13,16 +13,28 @@ var player_base
 
 var current_round
 
-@export var data_template: UnitData
-@export var enemy_data_template: UnitData
+@export var data_templates: Array[UnitData]
 @export var base_data_template: UnitData
+
+@onready var end_turn = get_node("../EndTurn")
+@onready var enemy_turn = get_node("../EnemyTurn")
+@onready var turn_counter = get_node("../PanelContainer/VBoxContainer/Turn/Val")
+@onready var wave_counter = get_node("../PanelContainer/VBoxContainer/Wave/Val")
+@onready var point_counter = get_node("../PanelContainer/VBoxContainer/Points/Val")
+var wave_num: int = 0
+var points: int = 0
 
 static var map: BattleMap
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	create_dev_map()
+	turn_counter.text = str(current_round)
+	wave_counter.text = str(wave_num)
+	point_counter.text = str(points)
 	map = self
+	
+	$AudioStreamPlayer.play(.1)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -35,8 +47,9 @@ func create_dev_map():
 	
 	#Let's create units and place them
 	units = []
-	var u = create_player_unit(data_template, get_map_tile(2,3))
-	u = create_player_unit(data_template, get_map_tile(3,3))
+	var u = create_player_unit(data_templates[0], get_map_tile(2,3))
+	u = create_player_unit(data_templates[1], get_map_tile(3,3))
+	u = create_player_unit(data_templates[2], get_map_tile(4,3))
 	
 	#Let's create the player base
 	create_player_base(base_data_template, get_map_tile(6,6))
@@ -69,24 +82,33 @@ func create_player_base(data: UnitData, tile: MapTile) -> BattleUnit:
 
 func start_player_turn():
 	current_round += 1
+	turn_counter.text = str(current_round)
 	for u in units:
 		if u.is_player_unit:
 			u.can_move = true
 			u.can_attack = true
+	PlayerInputManager.manager.can_process_clicks = true
+	end_turn.visible = true
 
 func end_player_turn():
 	for u in units:
 		if u.is_player_unit:
 			u.can_move = false
 			u.can_attack = false
-	
+	end_turn.visible = false
+	PlayerInputManager.manager.can_process_clicks = false
 	resolve_enemy_turn()
 
 func resolve_enemy_turn():
+	
+	#Show Enemy Turn Splash
+	enemy_turn.visible = true
+	
 	for u in units:
 		if not u.is_player_unit:
-			#print("Enemy turn")
+			highlight_tiles([u.current_tile],Color.RED)
 			await u.resolve_enemy_turn()
+			reset_highlighting()
 	
 	#Trigger any existing spawners
 	var to_remove = []
@@ -102,19 +124,22 @@ func resolve_enemy_turn():
 	#Create new spawners
 	EnemySpawnManager.spawn_manager.create_new_spawner(current_round)
 	
-	start_player_turn()
+	#Hide enemy turn splash
+	enemy_turn.visible = false
+	
+	if not units.any(func(u): return u.is_player_unit) or player_base.current_health <= 0:
+			resolve_loss()
+	else:
+		start_player_turn()
 
 func resolve_unit_death(unit):
 	if not unit.is_base:
+		AudioPlayer.instance.play_effect(unit.death_sound)
 		units.erase(unit)
 		unit.queue_free()
-		if not units.any(func(u): u.is_player_unit):
-			resolve_loss()
-	else:
-		resolve_loss()
 
 func resolve_loss():
-	print("You lose! Git gud!")
+	get_tree().quit()
 
 func get_map_tile_vector2D(coordinate: Vector2):
 	return get_map_tile(coordinate.x, coordinate.y)
@@ -142,6 +167,8 @@ func get_tiles_in_range(origin: MapTile, range: int) -> Array:
 func on_player_attack_resolved():
 	if not units.any(func(u): return u.can_attack and u.is_player_unit):
 		end_player_turn()
+	else:
+		PlayerInputManager.manager.can_process_clicks = true
 
 func generate_map():
 	#Initialize array of tiles
@@ -160,3 +187,23 @@ func generate_map():
 				instance.add_neighbor(neighbor)
 			add_child(instance)
 			tiles.append(instance)
+
+func reset_highlighting():
+	for t in tiles:
+		t.clear_highlight()
+
+func highlight_tiles(tiles, color):
+	for t in tiles:
+		t.set_highlight(color)
+
+func _on_player_unit_selected(unit):
+	reset_highlighting()
+	unit.current_tile.set_highlight(Color.LIME_GREEN)
+
+
+func _on_player_unit_deselected(unit):
+	reset_highlighting()
+
+func grant_points(amt):
+	points += amt
+	point_counter.text = str(points)

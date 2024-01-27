@@ -7,6 +7,7 @@ const SCENE = preload("res://scenes/units/enemy_spawn_portal.tscn")
 var enemies_to_spawn: Array
 var tile: MapTile
 
+var spawner_level: int
 var modifiers: Array[UnitModifier]
 
 # Called when the node enters the scene tree for the first time.
@@ -22,10 +23,13 @@ func try_spawn_next():
 	if enemies_to_spawn.size() != 0 and tile.occupant == null:
 		var next = enemies_to_spawn.pop_front()
 		var u = BattleMap.map.create_enemy_unit(next, tile)
+		u.current_level = spawner_level
 		for m in modifiers:
 			u.modifiers.append(m)
 			if m._stat_name == 'max_health':
 				u.current_health += m._added_amount
+				u.on_health_changed(0)
+		adjust_count()
 		await get_tree().create_timer(.05).timeout
 
 
@@ -39,3 +43,5 @@ static func build_spawner(tile: MapTile, scale = 128) -> EnemySpawnPortal:
 	
 	return instance
 
+func adjust_count():
+	$SpawnLabel.text = str(enemies_to_spawn.size())

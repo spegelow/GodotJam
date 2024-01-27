@@ -1,33 +1,61 @@
-[gd_scene load_steps=18 format=3 uid="uid://dpoi8j3k5ki3y"]
+[gd_scene load_steps=31 format=3 uid="uid://dpoi8j3k5ki3y"]
 
 [ext_resource type="PackedScene" uid="uid://bchqgfqdjpox5" path="res://scenes/battle_map.tscn" id="1_66l2e"]
 [ext_resource type="Script" path="res://scenes/units/unit_data.gd" id="2_872lc"]
+[ext_resource type="Texture2D" uid="uid://bv5xxnc7l12yf" path="res://art/monsterUnit.png" id="3_0lrpw"]
 [ext_resource type="Script" path="res://scenes/player_input_manager.gd" id="3_tf8g8"]
+[ext_resource type="Texture2D" uid="uid://c48pfs77fmf0b" path="res://art/portalTile.png" id="4_6dlnu"]
 [ext_resource type="PackedScene" uid="uid://dju7l6dwiuyl0" path="res://scenes/ui/unit_info_panel.tscn" id="4_extjv"]
-[ext_resource type="Texture2D" uid="uid://clnu6g04yoqs0" path="res://art/landscape.png" id="5_lvqc5"]
+[ext_resource type="Texture2D" uid="uid://fg0h03u7dy38" path="res://art/monsterUnit2.png" id="4_kqrfo"]
 [ext_resource type="Script" path="res://scenes/enemy_spawn_manager.gd" id="6_wxto2"]
 [ext_resource type="Script" path="res://scenes/upgrade_pool.gd" id="7_7serk"]
 [ext_resource type="Script" path="res://scenes/units/unit_modifier.gd" id="8_llvbr"]
+[ext_resource type="PackedScene" uid="uid://vaardh0atrrv" path="res://scenes/level_up_menu.tscn" id="9_cw6lv"]
+[ext_resource type="Texture2D" uid="uid://dqt5fs6x0xqb5" path="res://art/enemyMech2.png" id="9_ismao"]
+[ext_resource type="Texture2D" uid="uid://cxgw2b1c83mmi" path="res://art/Copy of enemyMech.png" id="9_y3a27"]
+[ext_resource type="AudioStream" uid="uid://cba1u05lyr0d4" path="res://Audio/2023-03-20_-_Space_Debris_-_www.FesliyanStudios.com.mp3" id="15_8goql"]
+[ext_resource type="Texture2D" uid="uid://5pl053jpvhrw" path="res://art/tileset (2).png" id="16_2wqb1"]
+[ext_resource type="PackedScene" uid="uid://bq6xdwcq2eeol" path="res://scenes/audio_player.tscn" id="16_dlwgd"]
 
-[sub_resource type="Resource" id="Resource_wsyg1"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_53l3y"]
+content_margin_left = 10.0
+content_margin_top = 5.0
+
+[sub_resource type="Resource" id="Resource_i4m5c"]
 script = ExtResource("2_872lc")
-_unit_name = "Player Unit"
+_unit_name = "Tanky Unit"
+_max_health = 25
+_attack = 2
+_defense = 3
+_movement = 2
+_range = 1
+_exp_value = 1
+_tag_list = Array[String](["Tank"])
+unit_sprite = ExtResource("3_0lrpw")
+
+[sub_resource type="Resource" id="Resource_ej37c"]
+script = ExtResource("2_872lc")
+_unit_name = "Fast Unit"
 _max_health = 10
 _attack = 3
 _defense = 1
+_movement = 5
+_range = 1
+_exp_value = 1
+_tag_list = Array[String](["Fast"])
+unit_sprite = ExtResource("3_0lrpw")
+
+[sub_resource type="Resource" id="Resource_t4b51"]
+script = ExtResource("2_872lc")
+_unit_name = "Power Unit"
+_max_health = 15
+_attack = 4
+_defense = 1
 _movement = 3
 _range = 1
-_exp_value = 0
-
-[sub_resource type="Resource" id="Resource_aafpa"]
-script = ExtResource("2_872lc")
-_unit_name = "Initial Enemy"
-_max_health = 1
-_attack = 2
-_defense = 0
-_movement = 1
-_range = 1
-_exp_value = 10
+_exp_value = 1
+_tag_list = Array[String](["Power"])
+unit_sprite = ExtResource("4_kqrfo")
 
 [sub_resource type="Resource" id="Resource_mxa60"]
 script = ExtResource("2_872lc")
@@ -38,83 +66,225 @@ _defense = 0
 _movement = 0
 _range = 0
 _exp_value = 0
+_tag_list = Array[String]([])
+unit_sprite = ExtResource("4_6dlnu")
 
 [sub_resource type="Resource" id="Resource_lxtph"]
 script = ExtResource("2_872lc")
 _unit_name = "Spawned Enemy"
 _max_health = 2
 _attack = 1
-_defense = 1
+_defense = 0
 _movement = 1
 _range = 1
-_exp_value = 1
+_exp_value = 2
+_tag_list = Array[String]([])
+unit_sprite = ExtResource("9_y3a27")
+
+[sub_resource type="Resource" id="Resource_axwpi"]
+script = ExtResource("2_872lc")
+_unit_name = "BOSS"
+_max_health = 25
+_attack = 5
+_defense = 1
+_movement = 2
+_range = 1
+_exp_value = 10
+_tag_list = Array[String](["Boss"])
+unit_sprite = ExtResource("9_ismao")
 
 [sub_resource type="Resource" id="Resource_x4gfl"]
 script = ExtResource("8_llvbr")
 _stat_name = "max_health"
-_added_amount = 2
+_added_amount = 1
+_mod_val = 3
+_mod_name = "Health Up"
+_mod_desc = "Increase Health"
+_required_tag = ""
 
 [sub_resource type="Resource" id="Resource_m4sku"]
 script = ExtResource("8_llvbr")
 _stat_name = "attack"
 _added_amount = 1
+_mod_val = 5
+_mod_name = "Attack Up"
+_mod_desc = "Increase attack power"
+_required_tag = "Power"
 
 [sub_resource type="Resource" id="Resource_u11gy"]
 script = ExtResource("8_llvbr")
 _stat_name = "defense"
 _added_amount = 1
+_mod_val = 10
+_mod_name = "Defense Up"
+_mod_desc = "It increases defense"
+_required_tag = "Tank"
 
 [sub_resource type="Resource" id="Resource_buqre"]
 script = ExtResource("8_llvbr")
 _stat_name = "movement"
 _added_amount = 1
+_mod_val = 10
+_mod_name = "Move Up"
+_mod_desc = "It increases movement"
+_required_tag = "Fast"
 
 [sub_resource type="Resource" id="Resource_ber6y"]
 script = ExtResource("8_llvbr")
 _stat_name = "range"
 _added_amount = 1
+_mod_val = 15
+_mod_name = "Range Up"
+_mod_desc = "It inceases range of attacks"
+_required_tag = ""
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_pe76m"]
+texture = ExtResource("16_2wqb1")
+texture_region_size = Vector2i(1024, 1024)
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+2:1/0 = 0
+1:1/next_alternative_id = 2
+1:1/0 = 0
+0:1/0 = 0
+0:2/0 = 0
+1:2/0 = 0
+2:2/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_ipwuk"]
+tile_size = Vector2i(1024, 1024)
+sources/1 = SubResource("TileSetAtlasSource_pe76m")
 
 [node name="game" type="Node"]
 
+[node name="EndTurn" type="Button" parent="."]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -151.0
+offset_top = -103.0
+grow_horizontal = 0
+grow_vertical = 0
+size_flags_horizontal = 0
+text = "End Turn"
+
+[node name="EnemyTurn" type="Button" parent="."]
+visible = false
+modulate = Color(1, 0, 0, 1)
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -71.0
+offset_right = 101.0
+grow_horizontal = 2
+grow_vertical = 0
+size_flags_horizontal = 4
+size_flags_vertical = 8
+text = "Enemy Turn"
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+offset_left = 1.0
+offset_right = 106.0
+offset_bottom = 102.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_53l3y")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
+layout_mode = 2
+
+[node name="Wave" type="Label" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+text = "Wave "
+
+[node name="Val" type="Label" parent="PanelContainer/VBoxContainer/Wave"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 53.0
+offset_top = -12.0
+offset_right = 93.0
+offset_bottom = 14.0
+grow_vertical = 2
+text = "##"
+
+[node name="Turn" type="Label" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+text = "Turn"
+
+[node name="Val" type="Label" parent="PanelContainer/VBoxContainer/Turn"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 53.0
+offset_top = -12.0
+offset_right = 93.0
+offset_bottom = 14.0
+grow_vertical = 2
+text = "##"
+
+[node name="Points" type="Label" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+text = "Points"
+
+[node name="Val" type="Label" parent="PanelContainer/VBoxContainer/Points"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 53.0
+offset_top = -12.0
+offset_right = 93.0
+offset_bottom = 14.0
+grow_vertical = 2
+text = "##"
+
 [node name="BattleMap" parent="." instance=ExtResource("1_66l2e")]
-data_template = SubResource("Resource_wsyg1")
-enemy_data_template = SubResource("Resource_aafpa")
+data_templates = Array[ExtResource("2_872lc")]([SubResource("Resource_i4m5c"), SubResource("Resource_ej37c"), SubResource("Resource_t4b51")])
 base_data_template = SubResource("Resource_mxa60")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="BattleMap"]
+stream = ExtResource("15_8goql")
+volume_db = -15.036
 
 [node name="PlayerInputManager" type="Node" parent="."]
 script = ExtResource("3_tf8g8")
 
 [node name="UnitInfo" parent="." instance=ExtResource("4_extjv")]
 
-[node name="End Turn" type="Button" parent="."]
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -39.0
-offset_top = 10.0
-offset_right = 39.0
-offset_bottom = 41.0
-grow_horizontal = 2
-text = "End Turn"
-
-[node name="Sprite2D" type="Sprite2D" parent="."]
-modulate = Color(0.686275, 0.686275, 0.686275, 1)
-z_index = -1
-position = Vector2(305, 982)
-scale = Vector2(0.310814, 0.505912)
-texture = ExtResource("5_lvqc5")
-
 [node name="EnemySpawnManager" type="Node" parent="."]
 script = ExtResource("6_wxto2")
 enemy_data = SubResource("Resource_lxtph")
+boss_data = SubResource("Resource_axwpi")
+upgrade_interval = 5
+amount_decrease_on_upgrade = 1
 amount_interval = 4
-spawn_interval = 3
 
 [node name="LevelUpItemPool" type="Node" parent="."]
 script = ExtResource("7_7serk")
 upgrades = Array[ExtResource("8_llvbr")]([SubResource("Resource_x4gfl"), SubResource("Resource_m4sku"), SubResource("Resource_u11gy"), SubResource("Resource_buqre"), SubResource("Resource_ber6y")])
+enemy_upgrades = Array[ExtResource("8_llvbr")]([SubResource("Resource_x4gfl"), SubResource("Resource_m4sku"), SubResource("Resource_u11gy"), SubResource("Resource_buqre"), SubResource("Resource_ber6y")])
 
+[node name="LevelUpMenu" parent="." instance=ExtResource("9_cw6lv")]
+visible = false
+
+[node name="audio_player" parent="." instance=ExtResource("16_dlwgd")]
+
+[node name="TileMap" type="TileMap" parent="."]
+z_index = -1
+scale = Vector2(0.1, 0.1)
+tile_set = SubResource("TileSet_ipwuk")
+format = 2
+layer_0/tile_data = PackedInt32Array(12, 65537, 1, 720908, 131073, 1, 1, 65537, 2, 65537, 65537, 2, 131073, 65537, 2, 131074, 65537, 2, 196610, 65537, 2, 196611, 65537, 0, 131075, 65537, 2, 65540, 65537, 2, 65541, 131073, 0, 65542, 131073, 0, 131078, 65537, 2, 131079, 131073, 0, 196615, 131073, 0, 262151, 131073, 0, 262150, 131073, 0, 262149, 65537, 0, 196612, 65537, 0, 131076, 65537, 2, 65539, 65537, 2, 65538, 65537, 2, 196613, 65537, 0, 131077, 131073, 0, 196614, 65537, 0, 262146, 65537, 0, 327682, 65537, 0, 327681, 65537, 0, 393217, 65537, 0, 393218, 65537, 0, 458754, 65537, 0, 458755, 131073, 0, 393219, 131073, 0, 393220, 65537, 0, 393221, 131073, 0, 327685, 131073, 0, 327686, 65537, 0, 327687, 65537, 0, 327688, 65537, 0, 393224, 65537, 0, 458759, 65537, 0, 458758, 1, 0, 458757, 1, 0, 327683, 65537, 0, 262147, 65537, 0, 327684, 131073, 0, 262148, 65537, 0, 65543, 131073, 0, 524292, 1, 0, 589828, 1, 0, 589829, 1, 0, 524293, 1, 0, 458756, 1, 0, 524294, 1, 0, 589831, 1, 0, 589832, 1, 0, 655369, 131073, 0, 655370, 131073, 0, 589834, 131073, 0, 524298, 131073, 0, 458761, 65537, 0, 458760, 131073, 0, 393223, 131073, 0, 393222, 131073, 0, 524295, 131073, 0, 524297, 65537, 0, 589833, 65537, 0, 524296, 131073, 0, 2, 65537, 2, 3, 65537, 2, 4, 65537, 2, 5, 65537, 2, 6, 65537, 2, 7, 65537, 2, 8, 65537, 2, 9, 65537, 2, 10, 65537, 2, 11, 65537, 2, 65547, 65537, 0, 131083, 65537, 0, 196619, 65537, 0, 262155, 65537, 0, 327691, 65537, 0, 393227, 65537, 0, 458763, 65537, 0, 524299, 65537, 0, 589835, 65537, 0, 655371, 65537, 0, 720907, 65537, 0, 720906, 65537, 0, 720905, 65537, 0, 720904, 65537, 0, 720903, 65537, 0, 655366, 65537, 0, 655365, 65537, 0, 655364, 1, 0, 655363, 1, 0, 655362, 1, 0, 655361, 65537, 0, 720897, 65537, 0, 720898, 65537, 0, 720899, 65537, 0, 720900, 65537, 0, 720901, 65537, 0, 720902, 65537, 0, 720896, 65537, 0, 655360, 65537, 0, 589824, 1, 1, 524288, 1, 1, 458752, 1, 1, 393216, 1, 1, 327680, 1, 1, 262144, 1, 1, 262145, 65537, 0, 196609, 65537, 0, 196608, 65537, 0, 131072, 65537, 0, 65536, 65537, 0, 458753, 65537, 0, 524289, 65537, 0, 589825, 65537, 0, 589826, 65537, 0, 589827, 65537, 0, 524291, 1, 0, 524290, 65537, 0, 655367, 65537, 0, 589830, 1, 0, 655368, 1, 0, 458762, 65537, 0, 393226, 65537, 0, 327690, 65537, 0, 262154, 65537, 0, 196618, 65537, 0, 131082, 65537, 0, 65546, 65537, 0, 65545, 65537, 0, 131081, 65537, 0, 131080, 65537, 0, 196616, 65537, 0, 262152, 65537, 0, 262153, 65537, 0, 196617, 65537, 0, 65544, 65537, 0, 327689, 65537, 0, 393225, 65537, 0, 655372, 65537, 0, 589836, 65537, 0, 524300, 65537, 0, 458764, 65537, 0, 65548, 65537, 0, 131084, 65537, 0, 196620, 65537, 0, 262156, 65537, 0, 327692, 65537, 0, 393228, 65537, 0)
+
+[connection signal="button_down" from="EndTurn" to="BattleMap" method="end_player_turn"]
+[connection signal="button_down" from="EnemyTurn" to="BattleMap" method="end_player_turn"]
 [connection signal="nothing_hovered" from="PlayerInputManager" to="UnitInfo" method="show_panel" binds= [false]]
+[connection signal="unit_deselected" from="PlayerInputManager" to="BattleMap" method="_on_player_unit_deselected"]
 [connection signal="unit_hovered" from="PlayerInputManager" to="UnitInfo" method="_on_unit_hovered"]
+[connection signal="unit_selected" from="PlayerInputManager" to="BattleMap" method="_on_player_unit_selected"]
 [connection signal="unit_selected" from="PlayerInputManager" to="UnitInfo" method="_on_unit_selected"]
-[connection signal="button_down" from="End Turn" to="BattleMap" method="end_player_turn"]

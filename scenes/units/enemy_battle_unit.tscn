@@ -1,9 +1,0 @@
-[gd_scene load_steps=3 format=3 uid="uid://cuh6ewdog42vo"]
-
-[ext_resource type="PackedScene" uid="uid://c3scnc21axdws" path="res://scenes/units/battle_unit.tscn" id="1_6x5tl"]
-[ext_resource type="Texture2D" uid="uid://cxgw2b1c83mmi" path="res://art/Copy of enemyMech.png" id="2_ub2td"]
-
-[node name="BattleUnit" instance=ExtResource("1_6x5tl")]
-
-[node name="UnitSprite" parent="." index="0"]
-texture = ExtResource("2_ub2td")

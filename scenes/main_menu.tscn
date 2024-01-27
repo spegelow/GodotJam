@@ -1,0 +1,41 @@
+[gd_scene load_steps=3 format=3 uid="uid://c4dv6owundve3"]
+
+[ext_resource type="Script" path="res://scenes/main_menu.gd" id="1_yrabw"]
+[ext_resource type="AudioStream" uid="uid://ceqey8bnp1v06" path="res://Audio/2023-02-16_-_Airlock_-_www.FesliyanStudios.com.mp3" id="2_4u7at"]
+
+[node name="main_menu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_yrabw")
+
+[node name="Title" type="Label" parent="."]
+layout_mode = 0
+offset_left = 471.0
+offset_top = 180.0
+offset_right = 683.0
+offset_bottom = 206.0
+text = "Super Awesome Game Title"
+
+[node name="Play" type="Button" parent="."]
+layout_mode = 0
+offset_left = 547.0
+offset_top = 304.0
+offset_right = 588.0
+offset_bottom = 335.0
+text = "Play"
+
+[node name="Quit" type="Button" parent="."]
+layout_mode = 0
+offset_left = 548.0
+offset_top = 381.0
+offset_right = 590.0
+offset_bottom = 412.0
+text = "Quit"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_4u7at")
+volume_db = -10.651

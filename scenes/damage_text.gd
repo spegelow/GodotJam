@@ -22,6 +22,8 @@ static func display_damage_text(damage_amount, position):
 	
 	instance.position = position
 	BattleMap.map.add_child(instance)
+	
 	await instance.get_tree().create_timer(instance.lifespan).timeout
 	
-	instance.queue_free()
+	if is_instance_valid(instance):
+		instance.queue_free()

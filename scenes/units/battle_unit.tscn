@@ -1,11 +1,41 @@
-[gd_scene load_steps=3 format=3 uid="uid://c3scnc21axdws"]
+[gd_scene load_steps=7 format=3 uid="uid://c3scnc21axdws"]
 
 [ext_resource type="Script" path="res://scenes/units/battle_unit.gd" id="1_vfvsr"]
-[ext_resource type="Texture2D" uid="uid://bv5xxnc7l12yf" path="res://art/monsterUnit.png" id="2_sdv35"]
+[ext_resource type="AudioStream" uid="uid://dx16xj33om4h4" path="res://Audio/explosionCrunch_000.ogg" id="2_1bkl5"]
+[ext_resource type="Texture2D" uid="uid://cxgw2b1c83mmi" path="res://art/Copy of enemyMech.png" id="2_uo5xe"]
+[ext_resource type="AudioStream" uid="uid://c1t2n6hkrrd1n" path="res://Audio/impactMetal_003.ogg" id="3_r5216"]
+[ext_resource type="AudioStream" uid="uid://bjwyjl5fhb6sd" path="res://Audio/forceField_000.ogg" id="4_jfh7i"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_352m2"]
+font_size = 24
+font_color = Color(0, 0.745098, 0.341176, 1)
+outline_size = 3
+outline_color = Color(0, 0, 0, 1)
 
 [node name="BattleUnit" type="Node2D"]
 script = ExtResource("1_vfvsr")
+death_sound = ExtResource("2_1bkl5")
+hit_sound = ExtResource("3_r5216")
+level_sound = ExtResource("4_jfh7i")
 
 [node name="UnitSprite" type="Sprite2D" parent="."]
 scale = Vector2(0.1, 0.1)
-texture = ExtResource("2_sdv35")
+texture = ExtResource("2_uo5xe")
+
+[node name="HealthLabel" type="Label" parent="."]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -22.0
+offset_top = 23.0
+offset_right = 18.0
+offset_bottom = 54.0
+grow_horizontal = 2
+grow_vertical = 0
+size_flags_horizontal = 4
+text = "##"
+label_settings = SubResource("LabelSettings_352m2")
+horizontal_alignment = 1
+vertical_alignment = 1

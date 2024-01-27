@@ -13,6 +13,7 @@ var occupant: BattleUnit
 
 @onready var tile_sprite: Sprite2D = get_node("TileSprite")
 @onready var highlight_sprite: Sprite2D = get_node("HighlightSprite")
+@onready var highlight_poly: Polygon2D = get_node("Polygon2D")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -35,6 +36,13 @@ func add_neighbor(other_tile: MapTile):
 	if(not neighbors.has(other_tile) and not other_tile.neighbors.has(self)):
 		neighbors.append(other_tile)
 		other_tile.neighbors.append(self)
+
+func clear_highlight():
+	highlight_poly.visible = false
+
+func set_highlight(color: Color):
+	highlight_poly.visible = true
+	highlight_poly.color = color
 
 # Instantiate and initialize a new map tile with given params, then hand it back to the caller
 static func build_tile(x: int, y: int) -> MapTile:

@@ -1,0 +1,130 @@
+[gd_scene load_steps=18 format=3 uid="uid://dpoi8j3k5ki3y"]
+
+[ext_resource type="PackedScene" uid="uid://bchqgfqdjpox5" path="res://scenes/battle_map.tscn" id="1_66l2e"]
+[ext_resource type="Script" path="res://scenes/units/unit_data.gd" id="2_872lc"]
+[ext_resource type="Script" path="res://scenes/player_input_manager.gd" id="3_tf8g8"]
+[ext_resource type="PackedScene" uid="uid://dju7l6dwiuyl0" path="res://scenes/ui/unit_info_panel.tscn" id="4_extjv"]
+[ext_resource type="Texture2D" uid="uid://clnu6g04yoqs0" path="res://art/landscape.png" id="5_lvqc5"]
+[ext_resource type="Script" path="res://scenes/enemy_spawn_manager.gd" id="6_wxto2"]
+[ext_resource type="Script" path="res://scenes/upgrade_pool.gd" id="7_7serk"]
+[ext_resource type="Script" path="res://scenes/units/unit_modifier.gd" id="8_llvbr"]
+
+[sub_resource type="Resource" id="Resource_wsyg1"]
+script = ExtResource("2_872lc")
+_unit_name = "Player Unit"
+_max_health = 10
+_attack = 3
+_defense = 1
+_movement = 3
+_range = 1
+_exp_value = 0
+
+[sub_resource type="Resource" id="Resource_aafpa"]
+script = ExtResource("2_872lc")
+_unit_name = "Initial Enemy"
+_max_health = 1
+_attack = 2
+_defense = 0
+_movement = 1
+_range = 1
+_exp_value = 10
+
+[sub_resource type="Resource" id="Resource_mxa60"]
+script = ExtResource("2_872lc")
+_unit_name = "Player Base"
+_max_health = 100
+_attack = 0
+_defense = 0
+_movement = 0
+_range = 0
+_exp_value = 0
+
+[sub_resource type="Resource" id="Resource_lxtph"]
+script = ExtResource("2_872lc")
+_unit_name = "Spawned Enemy"
+_max_health = 2
+_attack = 1
+_defense = 1
+_movement = 1
+_range = 1
+_exp_value = 1
+
+[sub_resource type="Resource" id="Resource_x4gfl"]
+script = ExtResource("8_llvbr")
+_stat_name = "max_health"
+_added_amount = 2
+_mod_val = 5
+
+[sub_resource type="Resource" id="Resource_m4sku"]
+script = ExtResource("8_llvbr")
+_stat_name = "attack"
+_added_amount = 1
+_mod_val = 5
+
+[sub_resource type="Resource" id="Resource_u11gy"]
+script = ExtResource("8_llvbr")
+_stat_name = "defense"
+_added_amount = 1
+_mod_val = 10
+
+[sub_resource type="Resource" id="Resource_buqre"]
+script = ExtResource("8_llvbr")
+_stat_name = "movement"
+_added_amount = 1
+_mod_val = 10
+
+[sub_resource type="Resource" id="Resource_ber6y"]
+script = ExtResource("8_llvbr")
+_stat_name = "range"
+_added_amount = 1
+_mod_val = 15
+
+[node name="game" type="Node"]
+
+[node name="BattleMap" parent="." instance=ExtResource("1_66l2e")]
+data_template = SubResource("Resource_wsyg1")
+enemy_data_template = SubResource("Resource_aafpa")
+base_data_template = SubResource("Resource_mxa60")
+
+[node name="PlayerInputManager" type="Node" parent="."]
+script = ExtResource("3_tf8g8")
+
+[node name="UnitInfo" parent="." instance=ExtResource("4_extjv")]
+
+[node name="End Turn" type="Button" parent="."]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -39.0
+offset_top = 10.0
+offset_right = 39.0
+offset_bottom = 41.0
+grow_horizontal = 2
+text = "End Turn"
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(0.686275, 0.686275, 0.686275, 1)
+z_index = -1
+position = Vector2(305, 982)
+scale = Vector2(0.310814, 0.505912)
+texture = ExtResource("5_lvqc5")
+
+[node name="EnemySpawnManager" type="Node" parent="."]
+script = ExtResource("6_wxto2")
+enemy_data = SubResource("Resource_lxtph")
+upgrade_interval = 3
+amount_decrease_on_upgrade = 0
+amount_interval = 10
+spawn_interval = 3
+
+[node name="LevelUpItemPool" type="Node" parent="."]
+script = ExtResource("7_7serk")
+upgrades = Array[ExtResource("8_llvbr")]([SubResource("Resource_x4gfl"), SubResource("Resource_m4sku"), SubResource("Resource_u11gy"), SubResource("Resource_buqre"), SubResource("Resource_ber6y")])
+enemy_upgrades = Array[ExtResource("8_llvbr")]([SubResource("Resource_x4gfl"), SubResource("Resource_m4sku"), SubResource("Resource_u11gy"), SubResource("Resource_buqre"), SubResource("Resource_ber6y")])
+
+[connection signal="nothing_hovered" from="PlayerInputManager" to="UnitInfo" method="show_panel" binds= [false]]
+[connection signal="unit_deselected" from="PlayerInputManager" to="BattleMap" method="_on_player_unit_deselected"]
+[connection signal="unit_hovered" from="PlayerInputManager" to="UnitInfo" method="_on_unit_hovered"]
+[connection signal="unit_selected" from="PlayerInputManager" to="BattleMap" method="_on_player_unit_selected"]
+[connection signal="unit_selected" from="PlayerInputManager" to="UnitInfo" method="_on_unit_selected"]
+[connection signal="button_down" from="End Turn" to="BattleMap" method="end_player_turn"]

@@ -1,7 +1,13 @@
-[gd_scene load_steps=3 format=3 uid="uid://b21lkgqogp5k4"]
+[gd_scene load_steps=4 format=3 uid="uid://b21lkgqogp5k4"]
 
 [ext_resource type="Script" path="res://scenes/units/enemy_spawn_portal.gd" id="1_7m7fy"]
 [ext_resource type="Texture2D" uid="uid://c48pfs77fmf0b" path="res://art/portalTile.png" id="1_u613k"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_be3fb"]
+font_size = 24
+font_color = Color(1, 0.180392, 0.901961, 1)
+outline_size = 3
+outline_color = Color(0, 0, 0, 1)
 
 [node name="EnemySpawnPortal" type="Node2D"]
 script = ExtResource("1_7m7fy")
@@ -10,3 +16,21 @@ script = ExtResource("1_7m7fy")
 modulate = Color(0.290196, 0.290196, 0.290196, 1)
 scale = Vector2(0.065, 0.065)
 texture = ExtResource("1_u613k")
+
+[node name="SpawnLabel" type="Label" parent="."]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -22.0
+offset_top = 23.0
+offset_right = 18.0
+offset_bottom = 54.0
+grow_horizontal = 2
+grow_vertical = 0
+size_flags_horizontal = 4
+text = "##"
+label_settings = SubResource("LabelSettings_be3fb")
+horizontal_alignment = 1
+vertical_alignment = 1
