@@ -37,6 +37,9 @@ func add_neighbor(other_tile: MapTile):
 		neighbors.append(other_tile)
 		other_tile.neighbors.append(self)
 
+func get_neighbors():
+	return neighbors
+
 func clear_highlight():
 	highlight_poly.visible = false
 
@@ -49,3 +52,25 @@ static func build_tile(x: int, y: int) -> MapTile:
 	var instance: MapTile = TILE_SCENE.instantiate()
 	instance.position_tile(x,y)
 	return instance
+
+func get_defense_bonus() -> int:
+	var data:TileData = BattleMap.instance.tilemap.get_cell_tile_data(0, coordinate)
+	return data.get_custom_data("defense")
+	
+func get_movement_cost(unit: BattleUnit) -> int:
+	var data:TileData = BattleMap.instance.tilemap.get_cell_tile_data(0, coordinate)
+	return data.get_custom_data("move_cost")
+
+func get_(unit: BattleUnit) -> int:
+	var data:TileData = BattleMap.instance.tilemap.get_cell_tile_data(0, coordinate)
+	return data.get_custom_data("move_cost")
+
+func can_pass(unit: BattleUnit) -> bool:
+	var data:TileData = BattleMap.instance.tilemap.get_cell_tile_data(0, coordinate)
+	if data.get_custom_data("impassable"):
+		return false
+		
+	return occupant == null or occupant.is_player_unit==unit.is_player_unit
+
+func can_occupy(unit: BattleUnit) -> bool:
+	return occupant == null

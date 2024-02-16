@@ -1,0 +1,33 @@
+[gd_resource type="Resource" script_class="CombatAction" load_steps=8 format=3 uid="uid://dgc56be46rpap"]
+
+[ext_resource type="Script" path="res://resources/battle actions/cost/action_cost.gd" id="1_5nd6t"]
+[ext_resource type="Script" path="res://resources/battle actions/combat_action.gd" id="1_7cdcy"]
+[ext_resource type="Script" path="res://resources/battle actions/range/action_range.gd" id="2_6x3vl"]
+[ext_resource type="Script" path="res://resources/battle actions/target/action_target.gd" id="4_sewjw"]
+
+[sub_resource type="Resource" id="Resource_e02ee"]
+script = ExtResource("1_5nd6t")
+amount = 0
+
+[sub_resource type="Resource" id="Resource_eyn4l"]
+script = ExtResource("2_6x3vl")
+min_range = 1
+max_range = 1
+
+[sub_resource type="Resource" id="Resource_0w65x"]
+script = ExtResource("4_sewjw")
+can_target_empty = false
+can_target_self = false
+can_target_allies = false
+can_target_enemies = true
+can_target_structures = true
+
+[resource]
+script = ExtResource("1_7cdcy")
+attack_modifier = 0
+defense_modifier = 0
+speed_modifier = 0
+_action_name = "Basic Attack"
+range = SubResource("Resource_eyn4l")
+cost = SubResource("Resource_e02ee")
+target = SubResource("Resource_0w65x")

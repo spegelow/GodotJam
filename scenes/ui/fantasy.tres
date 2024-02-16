@@ -1,0 +1,13 @@
+[gd_resource type="Theme" load_steps=3 format=3 uid="uid://dusnv5bwhpjwg"]
+
+[ext_resource type="Texture2D" uid="uid://bt188qjcdcm3k" path="res://art/Kenney_UI/kenney_fantasy-ui-borders/PNG/Double/Transparent center/panel-transparent-center-007.png" id="1_thtj1"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_fjw68"]
+texture = ExtResource("1_thtj1")
+texture_margin_left = 27.3385
+texture_margin_top = 28.058
+texture_margin_right = 28.2378
+texture_margin_bottom = 28.4177
+
+[resource]
+Button/styles/disabled = SubResource("StyleBoxTexture_fjw68")

@@ -22,7 +22,7 @@ func _process(delta):
 func try_spawn_next():
 	if enemies_to_spawn.size() != 0 and tile.occupant == null:
 		var next = enemies_to_spawn.pop_front()
-		var u = BattleMap.map.create_enemy_unit(next, tile)
+		var u = BattleMap.instance.create_enemy_unit(next, tile)
 		u.current_level = spawner_level
 		for m in modifiers:
 			u.modifiers.append(m)

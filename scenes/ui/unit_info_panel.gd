@@ -6,9 +6,16 @@ func _on_unit_selected(unit: BattleUnit):
 	show_panel(true)
 	update_panel(unit)
 
+func _on_unit_deselected(unit: BattleUnit):
+	show_panel(true)
+	update_panel(unit)
+
 func _on_unit_hovered(unit: BattleUnit):
 	show_panel(true)
 	update_panel(unit)
+
+func _on_nothing_hovered():
+	show_panel(false)
 
 func show_panel(state):
 	visible = state
@@ -22,4 +29,3 @@ func update_panel(unit: BattleUnit):
 	$Panel/VBoxContainer/VBoxContainer/GridContainer/StatDefense/Value.text = str(unit.get_stat('defense'))
 	$Panel/VBoxContainer/VBoxContainer/GridContainer/StatMovement/Value.text = str(unit.get_stat('movement'))
 	$Panel/VBoxContainer/VBoxContainer/GridContainer/StatRange/Value.text = str(unit.get_stat('range'))
-	

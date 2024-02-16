@@ -1,0 +1,30 @@
+[gd_resource type="Resource" script_class="MoveAction" load_steps=8 format=3 uid="uid://b3ddp6w7pq015"]
+
+[ext_resource type="Script" path="res://resources/battle actions/cost/action_cost.gd" id="1_lo7yi"]
+[ext_resource type="Script" path="res://resources/battle actions/move_action.gd" id="1_pfc38"]
+[ext_resource type="Script" path="res://resources/battle actions/range/movement_range.gd" id="2_xcssn"]
+[ext_resource type="Script" path="res://resources/battle actions/target/action_target.gd" id="4_igkli"]
+
+[sub_resource type="Resource" id="Resource_0smup"]
+script = ExtResource("1_lo7yi")
+amount = 0
+
+[sub_resource type="Resource" id="Resource_y3gqf"]
+script = ExtResource("2_xcssn")
+min_range = 0
+max_range = 0
+
+[sub_resource type="Resource" id="Resource_hl0a0"]
+script = ExtResource("4_igkli")
+can_target_empty = true
+can_target_self = true
+can_target_allies = true
+can_target_enemies = false
+can_target_structures = false
+
+[resource]
+script = ExtResource("1_pfc38")
+_action_name = "Move"
+range = SubResource("Resource_y3gqf")
+cost = SubResource("Resource_0smup")
+target = SubResource("Resource_hl0a0")

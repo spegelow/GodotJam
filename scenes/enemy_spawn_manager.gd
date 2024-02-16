@@ -14,18 +14,46 @@ static var spawn_manager: EnemySpawnManager
 @export var spawn_interval = 2
 @export var boss_spawn_interval = 10
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
+@export var enemies: Array[UnitData]
+
+var next_enemy: UnitData
+var next_modifiers: Array[UnitModifier]
+var next_enemy_count: int
+
+@export var spawn_points: Array[Vector2]
+var spawns
+
+func _init():
 	spawn_manager = self
 
-func create_new_spawner(turn_num):
-	if turn_num == 1 or turn_num % spawn_interval == 0 and turn_num % boss_spawn_interval != 0:
-		BattleMap.map.wave_num+=1
-		BattleMap.map.wave_counter.text = str(BattleMap.map.wave_num)
-		var tile = BattleMap.map.tiles.filter(func(t): return t.occupant == null and not BattleMap.map.spawners.any(func(s): s.tile == t)).pick_random()
+func create_new_spawner():
+	if spawns == null:
+		spawns = spawn_points.map(func(t): return BattleMap.instance.get_map_tile(t.x, t.y))
+	
+	
+	var tile = spawns.filter(func(t): return t.occupant == null and not BattleMap.instance.spawners.any(func(s): s.tile == t)).pick_random()
+	if tile != null:
 		var spawner = EnemySpawnPortal.build_spawner(tile)
-		BattleMap.map.add_child(spawner)
-		BattleMap.map.spawners.append(spawner)
+		BattleMap.instance.add_child(spawner)
+		BattleMap.instance.spawners.append(spawner)
+	
+		var enemy_count = next_enemy_count
+		
+		spawner.modifiers = next_modifiers.duplicate()
+		
+		for i in range(0, enemy_count):
+			spawner.enemies_to_spawn.append(next_enemy)
+		
+		spawner.adjust_count()
+
+func create_new_spawner_old(turn_num):
+	if turn_num == 1 or turn_num % spawn_interval == 0 and turn_num % boss_spawn_interval != 0:
+		BattleMap.instance.wave_num+=1
+		BattleMap.instance.wave_counter.text = str(BattleMap.instance.wave_num)
+		var tile = BattleMap.instance.tiles.filter(func(t): return t.occupant == null and not BattleMap.instance.spawners.any(func(s): s.tile == t)).pick_random()
+		var spawner = EnemySpawnPortal.build_spawner(tile)
+		BattleMap.instance.add_child(spawner)
+		BattleMap.instance.spawners.append(spawner)
 		
 		spawner.spawner_level = turn_num / upgrade_interval + 1
 		var enemy_count = turn_num / amount_interval - (spawner.spawner_level-1)*amount_decrease_on_upgrade + 1
@@ -33,14 +61,14 @@ func create_new_spawner(turn_num):
 		spawner.modifiers = UpgradePool.pool.get_random_enemy_upgrade_set((spawner.spawner_level-1) * points_per_upgrade)
 		
 		for i in range(0, enemy_count):
-			spawner.enemies_to_spawn.append(enemy_data)
+			spawner.enemies_to_spawn.append(enemies.pick_random())
 		
 		spawner.adjust_count()
 	if turn_num % boss_spawn_interval == 0:
-		var tile = BattleMap.map.tiles.filter(func(t): return t.occupant == null and not BattleMap.map.spawners.any(func(s): s.tile == t)).pick_random()
+		var tile = BattleMap.instance.tiles.filter(func(t): return t.occupant == null and not BattleMap.instance.spawners.any(func(s): s.tile == t)).pick_random()
 		var spawner = EnemySpawnPortal.build_spawner(tile)
-		BattleMap.map.add_child(spawner)
-		BattleMap.map.spawners.append(spawner)
+		BattleMap.instance.add_child(spawner)
+		BattleMap.instance.spawners.append(spawner)
 		
 		spawner.spawner_level = turn_num / upgrade_interval + 1
 		var enemy_count = turn_num / amount_interval - (spawner.spawner_level-1)*amount_decrease_on_upgrade + 1
@@ -50,3 +78,10 @@ func create_new_spawner(turn_num):
 		spawner.enemies_to_spawn.append(boss_data)
 		
 		spawner.adjust_count()
+
+func prepare_next_wave(wave_num: int):
+	var points = wave_num
+	next_enemy = enemy_data
+	next_modifiers = UpgradePool.pool.get_random_enemy_upgrade_set(points)
+	next_enemy_count = max(min((wave_num / 2) as int, 10), 1)
+	

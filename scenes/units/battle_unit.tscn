@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://c3scnc21axdws"]
+[gd_scene load_steps=8 format=3 uid="uid://c3scnc21axdws"]
 
 [ext_resource type="Script" path="res://scenes/units/battle_unit.gd" id="1_vfvsr"]
 [ext_resource type="AudioStream" uid="uid://dx16xj33om4h4" path="res://Audio/explosionCrunch_000.ogg" id="2_1bkl5"]
@@ -9,6 +9,12 @@
 [sub_resource type="LabelSettings" id="LabelSettings_352m2"]
 font_size = 24
 font_color = Color(0, 0.745098, 0.341176, 1)
+outline_size = 3
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_qh2q4"]
+font_size = 24
+font_color = Color(0.211765, 0.678431, 0.847059, 1)
 outline_size = 3
 outline_color = Color(0, 0, 0, 1)
 
@@ -37,5 +43,23 @@ grow_vertical = 0
 size_flags_horizontal = 4
 text = "##"
 label_settings = SubResource("LabelSettings_352m2")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="StackLabel" type="Label" parent="."]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 21.0
+offset_top = -57.0
+offset_right = 61.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 0
+size_flags_horizontal = 4
+text = "x#"
+label_settings = SubResource("LabelSettings_qh2q4")
 horizontal_alignment = 1
 vertical_alignment = 1

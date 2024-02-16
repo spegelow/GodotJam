@@ -2,7 +2,7 @@ extends Resource
 
 class_name UnitModifier
 
-@export_enum('unit_name','max_health','attack','defense','movement','range','exp_value') var _stat_name: String
+@export_enum('unit_name','max_health','attack','defense','movement','range','exp_value','number_attacks','stack_cap') var _stat_name: String
 @export var _added_amount: int
 
 @export var _mod_val: int = 1

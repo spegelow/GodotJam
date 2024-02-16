@@ -1,0 +1,66 @@
+[gd_scene load_steps=3 format=3 uid="uid://b6o2m8oht87pl"]
+
+[ext_resource type="Script" path="res://scenes/ui/game_over_panel.gd" id="1_bq2hx"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_aj6wj"]
+font_size = 40
+
+[node name="game_over_panel" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_bq2hx")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 42.0
+offset_top = 26.0
+offset_right = 42.0
+offset_bottom = 26.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.92, 0.8)
+
+[node name="Panel" type="Panel" parent="PanelContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/Panel"]
+layout_mode = 2
+offset_left = 462.0
+offset_right = 690.0
+offset_bottom = 58.0
+size_flags_horizontal = 4
+size_flags_vertical = 0
+text = "GAME OVER"
+label_settings = SubResource("LabelSettings_aj6wj")
+
+[node name="Retry" type="Button" parent="PanelContainer/Panel"]
+layout_mode = 0
+offset_left = 283.696
+offset_top = 445.0
+offset_right = 333.696
+offset_bottom = 476.0
+text = "Retry"
+
+[node name="Menu" type="Button" parent="PanelContainer/Panel"]
+offset_left = 534.782
+offset_top = 441.25
+offset_right = 630.782
+offset_bottom = 472.25
+text = "Main Menu"
+
+[node name="Quit" type="Button" parent="PanelContainer/Panel"]
+offset_left = 753.261
+offset_top = 436.25
+offset_right = 849.261
+offset_bottom = 467.25
+text = "Quit"
+
+[connection signal="pressed" from="PanelContainer/Panel/Menu" to="." method="_on_menu_pressed"]
+[connection signal="pressed" from="PanelContainer/Panel/Quit" to="." method="_on_quit_pressed"]
